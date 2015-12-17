@@ -210,7 +210,10 @@ stop_trace(Backend, Filter, Level) ->
 stop_trace({Backend, Filter, Level}) ->
     stop_trace(Backend, Filter, Level).
 
-stop_trace_int({Backend, _Filter, _Level} = Trace) ->
+%% The return tuple argument order from lager_util:validate_trace
+%% is different than the external representation of the same
+%% information.
+stop_trace_int({_Filter, _Level, Backend} = Trace) ->
     {Level, Traces} = lager_config:get(loglevel),
     NewTraces =  lists:delete(Trace, Traces),
     _ = lager_util:trace_filter([ element(1, T) || T <- NewTraces ]),
